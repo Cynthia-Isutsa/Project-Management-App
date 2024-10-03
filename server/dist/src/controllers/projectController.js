@@ -18,14 +18,19 @@ const getProjects = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.json(projects);
     }
     catch (error) {
-        res.status(500).json({ message: "Error Retrieving projects" });
+        res.status(500).json({ message: `Error Retrieving projects: ${error.message}` });
     }
 });
 exports.getProjects = getProjects;
 const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, description, startDate, endDate } = req.body;
+    // if (!name || !description || !startDate || !endDate) {
+    //     // Send the response and just exit the function, don't return the response object itself
+    //     res.status(400).json({ message: "All fields are required" });
+    //     return;  // Explicitly return `void`
+    // }
     try {
-        const newProject = prisma.project.create({
+        const newProject = yield prisma.project.create({
             data: {
                 name,
                 description,
@@ -36,7 +41,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(201).json(newProject);
     }
     catch (error) {
-        res.status(500).json({ message: "Error creating project" });
+        res.status(500).json({ message: `Error creating project: ${error.message}` });
     }
 });
 exports.createProject = createProject;
